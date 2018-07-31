@@ -45,9 +45,10 @@ export default class Edit extends React.Component   {
     }
     handleSubmit(e)  {
         e.preventDefault();
-        console.log(this.state)
+        console.log(this.state.id)
+        let id = this.state.id 
 
-        axios.put('/api/users' ,this.state).then(response => {
+        axios.put('/api/users/'+ id ,this.state).then(response => {
             console.log(response)
         }).then(error => {
             console.log(error)

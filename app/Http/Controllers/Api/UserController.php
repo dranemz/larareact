@@ -38,9 +38,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $request->isMethod('PUT') ? User::findOrFail($request->id) : new User();
+        $user = new User();
 
-        $user->id = $request->get('id');
         $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->password = bcrypt($request->get('password'));
@@ -84,7 +83,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->password = bcrypt($request->get('password'));
+
+        if($user->save())
+        {
+            return $user;
+        }
     }
 
     /**

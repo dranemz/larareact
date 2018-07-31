@@ -15,13 +15,14 @@ export default class User extends React.Component   {
         this.fetchUsers()
     }
 
-    fetchUsers()    {
+    fetchUsers(page_url)    {
         let $this = this
-
-        axios.get($this.state.url).then(response => {
+        page_url = page_url !== undefined ?  page_url : '/api/users'
+        
+        axios.get(page_url).then(response => {
+        //axios.get($this.state.url).then(response => {
             $this.setState({
-                data: response.data.data,
-                url:response.data.next_page_url  
+                data: response.data.data  
             })
             $this.makePagination(response.data)
         }).catch(error  => {
@@ -29,6 +30,12 @@ export default class User extends React.Component   {
         })
     }
 
+    nextPageUrlHandle() {
+        this.fetchUsers(this.state.pagination.next_page_url)
+    }
+    prevPageUrlHandle() {
+        this.fetchUsers(this.state.pagination.prev_page_url)
+    }
     loadMore()  {
         this.setState({
             url: this.state.pagination.next_page_url
@@ -54,7 +61,7 @@ export default class User extends React.Component   {
         return (
             <div>
                 <h2>Users Listing</h2>
-                <a href="/users/create" className="btn btn-primary">Add New User</a>
+                <a href="/users/create" className="btn btn-primary mb-2">Add New User</a>
                 <table className="table table-bordered">
                     <thead>
                         <tr>
@@ -71,7 +78,13 @@ export default class User extends React.Component   {
                         )}
                     </tbody>
                 </table>
-
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className="page-item"><a className="page-link" href="javascript:;" onClick={this.prevPageUrlHandle.bind(this)}>Previous</a></li>
+                        <li className="page-item disabled"><a className="page-link" href="#">{this.state.pagination.current_page} of {this.state.pagination.last_page}</a></li>
+                        <li className="page-item"><a className="page-link" href="javascript:;" onClick={this.nextPageUrlHandle.bind(this)}>Next</a></li>
+                    </ul>
+                </nav>       
                 <button className="btn btn-default" onClick={this.loadMore.bind(this)}>Load more results</button>
             </div>
         );
@@ -108,8 +121,6 @@ class UserRow extends React.Component {
         )
     }
 }
-
-
 
 
 if(document.getElementById('app'))  {

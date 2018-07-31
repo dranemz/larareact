@@ -5,7 +5,6 @@ export default class Create extends React.Component   {
     constructor()   {
         super();
         this.state = {
-            id: '',
             name: '',
             email: '',
             password: ''
